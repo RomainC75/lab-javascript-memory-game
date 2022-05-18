@@ -26,6 +26,7 @@ const cards = [
 ];
 
 const memoryGame = new MemoryGame(cards);
+memoryGame.shuffleCards()
 
 window.addEventListener('load', (event) => {
   let html = '';
@@ -44,8 +45,55 @@ window.addEventListener('load', (event) => {
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
     card.addEventListener('click', () => {
-      // TODO: write some code here
-      console.log(`Card clicked: ${card}`);
+      if(getComputedStyle(card.children[1]).backfaceVisibility!='visible'){
+        console.log(card.querySelector('.front'))
+        console.log(`Card clicked: ${card}`);
+        console.log(memoryGame.pickedCards)
+        if(memoryGame.pickedCards.length==2){
+          memoryGame.pickedCards.forEach(card=>hideCard(card))
+          memoryGame.pickedCards=[]
+        }
+        revealCard(card)
+        memoryGame.pickedCards.push(card);
+        if(memoryGame.pickedCards.length==2){
+          if(memoryGame.checkIfPair(memoryGame.pickedCards[0],memoryGame.pickedCards[1])){
+            memoryGame.pickedCards=[]
+          }
+        }
+        printScores()
+        if(memoryGame.checkIfFinished()){
+          printEnding()
+        }
+        }
     });
   });
 });
+
+const printScores = () =>{
+  const clickedVal = document.querySelector('#pairs-clicked')
+  const guessedVal = document.querySelector('#pairs-guessed')
+  clickedVal.textContent = memoryGame.pairsClicked
+  guessedVal.textContent = memoryGame.pairsGuessed
+}
+
+const revealCard = (card)=>{
+  card.querySelector('.back').style.visibility="hidden"
+  card.querySelector('.front').style.backfaceVisibility="visible"
+}
+
+const hideCard = (card)=>{
+  card.querySelector('.back').style.visibility="visible"
+  card.querySelector('.front').style.backfaceVisibility="hidden"
+}
+
+const printEnding = () =>{
+  document.getElementsByClassName('endingBoard')[0].style.display='block'
+  document.querySelector('#pairs-clicked-ending').textContent=memoryGame.pairsClicked
+  document.querySelector('#pairs-guessed-ending').textContent=memoryGame.pairsGuessed
+  document.querySelector('#restart').addEventListener('click',()=>{
+    memoryGame.restart()
+    printScores()
+    dispatchEvent(new Event('load'));
+    document.getElementsByClassName('endingBoard')[0].style.display='none'
+  })
+}

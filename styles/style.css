@@ -88,3 +88,38 @@ p {
   font-size: 20px;
   text-align: center;
 }
+
+
+.endingBoard{
+  position:absolute;
+  width:500px;
+  height:300px;
+  background:black;
+  top:400px;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:0.5em;
+  display:none;
+}
+
+.endingBoard p{
+  color:white;
+}
+
+.endingBoard__scores{
+  width:90%;
+  margin:40px auto;
+  color:orange;
+  text-align:center;
+}
+
+.endingBoard__scores div{
+  margin-bottom:20px;
+}
+
+#restart{
+  display:block;
+  margin : 20px auto;
+  width:100px;
+  height:40px;
+}
